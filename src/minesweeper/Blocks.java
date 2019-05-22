@@ -14,7 +14,9 @@ import java.awt.Graphics;
  */
 public class Blocks extends Button implements Displayable{ 
     int value;
+    int flagsAround = 0;
     boolean flag = false;
+    
     public Blocks(int v, int x ,int y){
         value = v;
         setPos(x,y);
@@ -23,7 +25,6 @@ public class Blocks extends Button implements Displayable{
     }
     public void pressed(){
         clicked = true;
-        
     }
     public void flagged(){
         if(flag){
@@ -33,6 +34,11 @@ public class Blocks extends Button implements Displayable{
         else{
             flag = true;
             clicked = false;
+        }
+    }
+    public void countFlags(Blocks b){
+        if(b.flag){
+            flagsAround++;
         }
     }
 

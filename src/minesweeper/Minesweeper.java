@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseInputListener {
 
-    private ArrayList<Blocks> mines;
     private int rows, cols;
     private Board board;
     private boolean space;
@@ -26,9 +25,8 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
     private BufferedImage back;
     private int minesLeft;
     private int time;
-    private int bXPos;
-    private int bYPos;
     int mouseCX, mouseCY, mouseX, mouseY;
+    boolean p = true;
 
     public Minesweeper() {
         //set up all variables related to the game
@@ -37,25 +35,9 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         click = false;
         time = 0;
         minesLeft = 99;
-        bXPos = 0;
-        bYPos = 0;
         rows = 16;
         cols = 30;
         board = new Board(rows,cols,minesLeft);
-        
-        mines = new ArrayList<Blocks>();
-        
-        for(int r = 1; r < rows+1; r++){
-            for(int c = 1; c < cols+1; c++){
-                mines.add(new Blocks(board.getBoard()[r][c],bXPos,bYPos));
-                bXPos+=25;
-                if(bXPos>=750){
-                    bXPos=0;
-                    bYPos+=25;
-                }
-            }
-        }
-        System.out.print(mines.size());
 
         
 
@@ -90,35 +72,59 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
 
         graphToBack.setColor(Color.WHITE);
         
-        for(Blocks b : mines){
-            //b.pressed();
-            b.draw(graphToBack);
+        for(Blocks[] r : board.getMines()){
+            for(Blocks b : r){
+                //b.pressed();
+                b.draw(graphToBack);
+            }
         }
 
-        
+        board.setFV();
+        board.openAround();
 
         
-
         //flagging mines
         if (space == true) {
-            for(Blocks bl : mines){
-                if(!bl.clicked){
-                    if(mouseX>=bl.getX()&&mouseX<bl.getX()+bl.getWidth()&&mouseY>=bl.getY()&&mouseY<bl.getY()+bl.getHeight()){
-                        bl.flagged();
+            for(Blocks[] rows : board.getMines()){
+                for(Blocks bl : rows){
+                    if(!bl.clicked){
+                        if(mouseX>=bl.getX()&&mouseX<bl.getX()+bl.getWidth()&&mouseY>=bl.getY()&&mouseY<bl.getY()+bl.getHeight()){
+                            if(p == true){
+                                bl.flagged();
+                                p = false;
+                            }
+                        }
                     }
                 }
             }  
         }
         //opening blocks
+        int fCount = 0;
         if (click == true) {
-            for(Blocks bl : mines){
-                if(!bl.flag){
-                    if(mouseCX>=bl.getX()&&mouseCX<bl.getX()+bl.getWidth()&&mouseCY>=bl.getY()&&mouseCY<bl.getY()+bl.getHeight()){
-                        bl.pressed();
+            fCount = 0;
+            for(int r = 0; r < rows; r++){
+                for(int c = 0; c < cols; c++){
+                    if(!board.getMines()[r][c].flag){
+                        if(mouseCX>=board.getMines()[r][c].getX()&&mouseCX<board.getMines()[r][c].getX()+board.getMines()[r][c].getWidth()&&mouseCY>=board.getMines()[r][c].getY()&&mouseCY<board.getMines()[r][c].getY()+board.getMines()[r][c].getHeight()){
+                            board.getMines()[r][c].pressed();
+                        }
                     }
                 }
             }
         }
+        /*
+        if (click == true) {
+            for(Blocks[] ros : mines){
+                for(Blocks bl : ros){
+                    if(!bl.flag){
+                        if(mouseCX>=bl.getX()&&mouseCX<bl.getX()+bl.getWidth()&&mouseCY>=bl.getY()&&mouseCY<bl.getY()+bl.getHeight()){
+                            bl.pressed();
+                            
+                        }
+                    }
+                }
+            }
+        }*/
 
         twoDGraph.drawImage(back, null, 0, 0);
     }
@@ -142,6 +148,7 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         switch (toUpperCase(e.getKeyChar())) {
             case ' ':
                 space = false;
+                p = true;
                 break;
         }
     }
