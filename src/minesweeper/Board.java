@@ -63,7 +63,7 @@ public class Board{
                 mines[r][c].flagsAround=0;
                 for(int j = r - 1; j <= r+1; j++){
                     for(int i = c - 1; i <= c+1; i++){
-                        if(!(r<1)&&!(c<1)&&!(j>rows-1)&&!(i>cols-1)){
+                        if(!(j<0)&&!(i<0)&&!(j>rows-1)&&!(i>cols-1)){
                             mines[r][c].countFlags(mines[j][i]);
                         }
                     }
@@ -72,12 +72,12 @@ public class Board{
         }
     }
     public void openAround(){
-        for(int r = 0; r < rows; r++){
-            for (int c = 0; c < cols; c++){
-                if(mines[r][c].flagsAround==mines[r][c].value&&mines[r][c].clicked){
-                    for(int j = r - 1; j <= r+1; j++){
-                        for(int i = c - 1; i <= c+1; i++){
-                            if(!(r<1)&&!(c<1)&&!(j>rows-1)&&!(i>cols-1)){
+        for(int rs = 0; rs < rows; rs++){
+            for (int cs = 0; cs < cols; cs++){
+                if(mines[rs][cs].flagsAround==mines[rs][cs].value&&mines[rs][cs].spaced||mines[rs][cs].clicked&&mines[rs][cs].value == 0){
+                    for(int j = rs - 1; j <= rs+1; j++){
+                        for(int i = cs - 1; i <= cs+1; i++){
+                            if(!(j<0)&&!(i<0)&&!(j>rows-1)&&!(i>cols-1)&&!mines[j][i].flag){
                                 mines[j][i].pressed();
                             }
                         }

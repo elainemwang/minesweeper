@@ -83,21 +83,64 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         board.openAround();
 
         
-        //flagging mines
+        //flagging mines and opening around after flagged
+        
         if (space == true) {
             for(Blocks[] rows : board.getMines()){
                 for(Blocks bl : rows){
                     if(!bl.clicked){
                         if(mouseX>=bl.getX()&&mouseX<bl.getX()+bl.getWidth()&&mouseY>=bl.getY()&&mouseY<bl.getY()+bl.getHeight()){
-                            if(p == true){
+                            if(p){
                                 bl.flagged();
                                 p = false;
+                                                            }
+                        }
+                    }
+                    else{
+                        if(mouseX>=bl.getX()&&mouseX<bl.getX()+bl.getWidth()&&mouseY>=bl.getY()&&mouseY<bl.getY()+bl.getHeight()){
+                            if(p){  
+                                bl.spaced=true;
+                                p = false;
                             }
+                            //board.openAround();
                         }
                     }
                 }
             }  
+            
         }
+        
+        if(space == false){
+            for(Blocks[] r : board.getMines()){
+                for(Blocks bk : r){
+                    bk.spaced = false;
+                }
+            }
+        }
+        /*
+        if (space == true) {
+            for(int r = 0; r < rows; r++){
+                for(int c = 0; c < cols; c++){
+                    if(!board.getMines()[r][c].clicked){
+                        if(mouseCX>=board.getMines()[r][c].getX()&&mouseCX<board.getMines()[r][c].getX()+board.getMines()[r][c].getWidth()&&mouseCY>=board.getMines()[r][c].getY()&&mouseCY<board.getMines()[r][c].getY()+board.getMines()[r][c].getHeight()){
+                            if(p == true){
+                                board.getMines()[r][c].flagged();
+                                p = false;
+                                board.getMines()[r][c].spaced=false;
+                            }
+                        }
+                    }
+                    else{
+                        if(mouseCX>=board.getMines()[r][c].getX()&&mouseCX<board.getMines()[r][c].getX()+board.getMines()[r][c].getWidth()&&mouseCY>=board.getMines()[r][c].getY()&&mouseCY<board.getMines()[r][c].getY()+board.getMines()[r][c].getHeight()){
+                            board.getMines()[r][c].spaced=true;
+                            board.openAround(r,c);
+                        }
+                    }
+                }
+            }
+        }*/
+        
+        
         //opening blocks
         int fCount = 0;
         if (click == true) {

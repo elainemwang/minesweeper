@@ -16,6 +16,7 @@ public class Blocks extends Button implements Displayable{
     int value;
     int flagsAround = 0;
     boolean flag = false;
+    boolean spaced = false;
     
     public Blocks(int v, int x ,int y){
         value = v;
@@ -35,6 +36,7 @@ public class Blocks extends Button implements Displayable{
             flag = true;
             clicked = false;
         }
+        spaced = false;
     }
     public void countFlags(Blocks b){
         if(b.flag){
@@ -90,8 +92,37 @@ public class Blocks extends Button implements Displayable{
         else if(clicked==true){
             window.setColor(Color.WHITE);
             window.fillRect(xPos, yPos, width, height);
-            window.setColor(Color.BLACK);
-            window.drawString(value+"", xPos+10, yPos+20);
+            if(value == 1){
+                window.setColor(Color.BLUE);
+            }
+            else if(value == 2){
+                window.setColor(Color.green);
+            }
+            else if(value == 3){
+                window.setColor(Color.RED);
+            }
+            else if(value == 4){
+                window.setColor(Color.PINK);
+            }
+            else if(value == 5){
+                window.setColor(Color.MAGENTA);
+            }
+            else if(value == 6){
+                window.setColor(Color.CYAN);
+            }
+            else if(value == 7){
+                window.setColor(Color.BLACK);
+            }
+            else if(value == 8){
+                window.setColor(Color.GRAY);
+            }
+            if(value != 9 && value != 0){
+                window.drawString(value+"", xPos+10, yPos+20);
+            }
+            if(value == 9){
+                window.setColor(Color.BLACK);
+                window.fillRect(xPos, yPos, width, height);
+            }
         }
         else{
             window.setColor(Color.LIGHT_GRAY);
