@@ -16,6 +16,7 @@ public class Blocks extends Button implements Displayable{
     int value;
     int flagsAround = 0;
     boolean flag = false;
+    //check if block is open and spaced for opening around
     boolean spaced = false;
     
     public Blocks(int v, int x ,int y){
@@ -83,12 +84,14 @@ public class Blocks extends Button implements Displayable{
     
     public void draw(Graphics window) {
         //add code to draw the block
+        //flag drawing
         if(flag == true){
             window.setColor(Color.RED);
             window.fillRect(getX(), getY(), getWidth(), getHeight());
             window.setColor(Color.BLACK);
             window.drawRect(xPos, yPos, width, height);
         }
+        //opened drawing
         else if(clicked==true){
             window.setColor(Color.WHITE);
             window.fillRect(xPos, yPos, width, height);
@@ -124,6 +127,7 @@ public class Blocks extends Button implements Displayable{
                 window.fillRect(xPos, yPos, width, height);
             }
         }
+        //unopened, unflagged drawing
         else{
             window.setColor(Color.LIGHT_GRAY);
             window.fillRect(getX(), getY(), getWidth(), getHeight());

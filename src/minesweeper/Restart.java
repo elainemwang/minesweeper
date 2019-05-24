@@ -5,6 +5,7 @@
  */
 package minesweeper;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 /**
@@ -13,19 +14,30 @@ import java.awt.Graphics;
  */
 public class Restart extends Button implements Displayable{
 
-    @Override
+    boolean restart = false;
+    
+    public Restart(){
+        setPos(300,10);
+        setWidth(50);
+        setHeight(30);
+    }
+
     public void pressed() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        restart = true;
     }
 
-    @Override
+
     public void draw(Graphics window) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        window.setColor(Color.GRAY);
+        window.fillRect(xPos, yPos, width, height);
+        window.setColor(Color.YELLOW);
+        window.drawString("RESTART", xPos, yPos+10);
     }
 
-    @Override
+
     public void setPos(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        xPos = x;
+        yPos = y;
     }
 
     @Override
@@ -40,32 +52,32 @@ public class Restart extends Button implements Displayable{
 
     @Override
     public int getX() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return xPos;
     }
 
     @Override
     public int getY() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return yPos;
     }
 
     @Override
     public int getWidth() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return width;
     }
 
     @Override
     public int getHeight() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return height;
     }
 
     @Override
     public void setWidth(int w) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        width = w;
     }
 
     @Override
     public void setHeight(int h) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        height = h;
     }
     
 }

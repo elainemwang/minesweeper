@@ -20,6 +20,5 @@ public abstract class Button {
     boolean clicked = false;
     public abstract void pressed();
     public abstract void draw(Graphics window);
-
     
 }

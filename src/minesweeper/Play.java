@@ -11,7 +11,7 @@ import java.awt.Component;
 public class Play extends JFrame
 {
 	private static final int WIDTH = 750;
-	private static final int HEIGHT = 423;
+	private static final int HEIGHT = 473;
 
 	public Play()
 	{

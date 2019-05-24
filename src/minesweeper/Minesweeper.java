@@ -23,10 +23,13 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
     private boolean space;
     private boolean click;
     private BufferedImage back;
-    private int minesLeft;
+    private int minesLeft, mines;
     private int time;
     int mouseCX, mouseCY, mouseX, mouseY;
+    int numOpened;
     boolean p = true;
+    boolean gameOver = false;
+    Restart restart;
 
     public Minesweeper() {
         //set up all variables related to the game
@@ -34,10 +37,14 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         space = false;
         click = false;
         time = 0;
-        minesLeft = 99;
+        mines = 99;
+        minesLeft = mines;
         rows = 16;
         cols = 30;
-        board = new Board(rows,cols,minesLeft);
+        //board with array of blocks and array of values
+        board = new Board(rows,cols,mines);
+        //restart button
+        restart = new Restart();
 
         
 
@@ -53,7 +60,10 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
     }
 
     public void update(Graphics window) {
-        paint(window);
+        if(!gameOver){
+            paint(window);
+        }
+        
     }
 
     public void paint(Graphics window) {
@@ -72,37 +82,47 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
 
         graphToBack.setColor(Color.WHITE);
         
+        //check for restart
+        if(restart.restart){
+            board = new Board(rows,cols,mines);
+        }
+        
+        //draw all the blocks
         for(Blocks[] r : board.getMines()){
             for(Blocks b : r){
                 //b.pressed();
                 b.draw(graphToBack);
             }
         }
-
+        restart.draw(graphToBack);
+        
+        //set the flag values for the board
         board.setFV();
+        //open blocks around the spaced and opened blocks that have mines flagged
         board.openAround();
-
         
-        //flagging mines and opening around after flagged
         
+        //flagging mines
         if (space == true) {
             for(Blocks[] rows : board.getMines()){
                 for(Blocks bl : rows){
+                    //if the block isn't opened, flag it
                     if(!bl.clicked){
                         if(mouseX>=bl.getX()&&mouseX<bl.getX()+bl.getWidth()&&mouseY>=bl.getY()&&mouseY<bl.getY()+bl.getHeight()){
                             if(p){
                                 bl.flagged();
+                                //bl.draw(graphToBack);
                                 p = false;
                                                             }
                         }
                     }
+                    //if the block is opened, let the openAround method check if the blocks around it should be opened
                     else{
                         if(mouseX>=bl.getX()&&mouseX<bl.getX()+bl.getWidth()&&mouseY>=bl.getY()&&mouseY<bl.getY()+bl.getHeight()){
                             if(p){  
                                 bl.spaced=true;
                                 p = false;
                             }
-                            //board.openAround();
                         }
                     }
                 }
@@ -110,67 +130,70 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
             
         }
         
+        //on space release, unmark all blocks for openAround
         if(space == false){
             for(Blocks[] r : board.getMines()){
                 for(Blocks bk : r){
                     bk.spaced = false;
+                    //bk.draw(graphToBack);
                 }
             }
         }
-        /*
-        if (space == true) {
-            for(int r = 0; r < rows; r++){
-                for(int c = 0; c < cols; c++){
-                    if(!board.getMines()[r][c].clicked){
-                        if(mouseCX>=board.getMines()[r][c].getX()&&mouseCX<board.getMines()[r][c].getX()+board.getMines()[r][c].getWidth()&&mouseCY>=board.getMines()[r][c].getY()&&mouseCY<board.getMines()[r][c].getY()+board.getMines()[r][c].getHeight()){
-                            if(p == true){
-                                board.getMines()[r][c].flagged();
-                                p = false;
-                                board.getMines()[r][c].spaced=false;
-                            }
-                        }
-                    }
-                    else{
-                        if(mouseCX>=board.getMines()[r][c].getX()&&mouseCX<board.getMines()[r][c].getX()+board.getMines()[r][c].getWidth()&&mouseCY>=board.getMines()[r][c].getY()&&mouseCY<board.getMines()[r][c].getY()+board.getMines()[r][c].getHeight()){
-                            board.getMines()[r][c].spaced=true;
-                            board.openAround(r,c);
-                        }
-                    }
-                }
-            }
-        }*/
         
         
-        //opening blocks
-        int fCount = 0;
+        
+        //opening blocks with clicks and clicking restart button
         if (click == true) {
-            fCount = 0;
-            for(int r = 0; r < rows; r++){
-                for(int c = 0; c < cols; c++){
-                    if(!board.getMines()[r][c].flag){
-                        if(mouseCX>=board.getMines()[r][c].getX()&&mouseCX<board.getMines()[r][c].getX()+board.getMines()[r][c].getWidth()&&mouseCY>=board.getMines()[r][c].getY()&&mouseCY<board.getMines()[r][c].getY()+board.getMines()[r][c].getHeight()){
-                            board.getMines()[r][c].pressed();
-                        }
-                    }
-                }
+            if(mouseCX>=restart.getX()&&mouseCX<restart.getX()+restart.getWidth()&&mouseCY>=restart.getY()&&mouseCY<restart.getY()+restart.getHeight()){
+                //restart the game
+                restart.pressed();
             }
-        }
-        /*
-        if (click == true) {
-            for(Blocks[] ros : mines){
+            for(Blocks[] ros : board.getMines()){
                 for(Blocks bl : ros){
+                    //if the block isn't flagged
                     if(!bl.flag){
                         if(mouseCX>=bl.getX()&&mouseCX<bl.getX()+bl.getWidth()&&mouseCY>=bl.getY()&&mouseCY<bl.getY()+bl.getHeight()){
+                            //open the block
                             bl.pressed();
-                            
+                            //bl.draw(graphToBack);
                         }
                     }
                 }
             }
-        }*/
-
+        }
+        
+        
+        
+        //check for win/loss
+        numOpened = 0;
+        for(Blocks[] rss : board.getMines()){
+            for(Blocks bks : rss){
+                if(bks.clicked&&bks.value!=9){
+                    numOpened++;
+                }
+                //check for loss
+                if(bks.value == 9 && bks.clicked){
+                    for(Blocks[] ro : board.getMines()){
+                        for(Blocks all : ro){
+                            //add flag check to see what was wrong (not complete)
+                            all.pressed();
+                            //all.draw(graphToBack);
+                        }
+                    }
+                    gameOver = true;
+                    break;
+                }
+            }
+        }
+        //check for win
+        //System.out.println(numOpened);
+        if(numOpened == (rows*cols)-mines){
+            System.out.println(numOpened);
+            System.out.println("YOU WIN!!"); //wrong
+        }
         twoDGraph.drawImage(back, null, 0, 0);
     }
+    
     
     public void actionPerformed(ActionEvent a){
         
