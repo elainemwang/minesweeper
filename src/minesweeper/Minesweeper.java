@@ -85,6 +85,7 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         //check for restart
         if(restart.restart){
             board = new Board(rows,cols,mines);
+            restart.restart = false;
         }
         
         //draw all the blocks
@@ -177,10 +178,10 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
                         for(Blocks all : ro){
                             //add flag check to see what was wrong (not complete)
                             all.pressed();
-                            //all.draw(graphToBack);
+                            all.draw(graphToBack);
                         }
                     }
-                    gameOver = true;
+                    //gameOver = true;
                     break;
                 }
             }
