@@ -21,22 +21,25 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
     private int rows, cols;
     private Board board;
     private boolean space;
-    private boolean click;
+    private boolean click, rClick;
     private BufferedImage back;
     private int minesLeft, mines;
-    private int time;
+    private long stime;
+    private long etime;
     int mouseCX, mouseCY, mouseX, mouseY;
     int numOpened;
     boolean p = true;
     boolean gameOver = false;
     Restart restart;
+    boolean first = true;
+    Timer timer;
 
     public Minesweeper() {
         //set up all variables related to the game
-       
+
         space = false;
         click = false;
-        time = 0;
+        rClick = false;
         mines = 99;
         minesLeft = mines;
         rows = 16;
@@ -45,6 +48,7 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         board = new Board(rows,cols,mines);
         //restart button
         restart = new Restart();
+        timer = new Timer();
 
         
 
@@ -63,7 +67,23 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         if(!gameOver){
             paint(window);
         }
-        
+        if(rClick){
+            if(mouseCX>=restart.getX()&&mouseCX<restart.getX()+restart.getWidth()&&mouseCY>=restart.getY()&&mouseCY<restart.getY()+restart.getHeight()){
+                    //restart the game
+                    restart.pressed();
+
+            }
+        }
+        //check for restart
+        if(restart.clicked){
+            board = new Board(rows,cols,mines);
+            first = true;
+            restart.clicked = false;
+            //fix start -> immediately flag
+            p = true;
+            numOpened = 0;
+            gameOver = false;
+        }
     }
 
     public void paint(Graphics window) {
@@ -81,12 +101,8 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         Graphics graphToBack = back.createGraphics();
 
         graphToBack.setColor(Color.WHITE);
+
         
-        //check for restart
-        if(restart.restart){
-            board = new Board(rows,cols,mines);
-            restart.restart = false;
-        }
         
         //draw all the blocks
         for(Blocks[] r : board.getMines()){
@@ -105,16 +121,22 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         
         //flagging mines
         if (space == true) {
+            //System.out.println(p);
             for(Blocks[] rows : board.getMines()){
                 for(Blocks bl : rows){
                     //if the block isn't opened, flag it
                     if(!bl.clicked){
                         if(mouseX>=bl.getX()&&mouseX<bl.getX()+bl.getWidth()&&mouseY>=bl.getY()&&mouseY<bl.getY()+bl.getHeight()){
                             if(p){
+                                //System.out.println("flagging");
+                                if(first){
+                                    stime = System.nanoTime();
+                                }
+                                first = false;
                                 bl.flagged();
-                                //bl.draw(graphToBack);
+                                bl.draw(graphToBack);
                                 p = false;
-                                                            }
+                                }
                         }
                     }
                     //if the block is opened, let the openAround method check if the blocks around it should be opened
@@ -127,8 +149,7 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
                         }
                     }
                 }
-            }  
-            
+            } 
         }
         
         //on space release, unmark all blocks for openAround
@@ -143,24 +164,25 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
         
         
         
-        //opening blocks with clicks and clicking restart button
+        //opening blocks with clicks
         if (click == true) {
-            if(mouseCX>=restart.getX()&&mouseCX<restart.getX()+restart.getWidth()&&mouseCY>=restart.getY()&&mouseCY<restart.getY()+restart.getHeight()){
-                //restart the game
-                restart.pressed();
-            }
             for(Blocks[] ros : board.getMines()){
                 for(Blocks bl : ros){
                     //if the block isn't flagged
-                    if(!bl.flag){
-                        if(mouseCX>=bl.getX()&&mouseCX<bl.getX()+bl.getWidth()&&mouseCY>=bl.getY()&&mouseCY<bl.getY()+bl.getHeight()){
-                            //open the block
+                    if(mouseCX>=bl.getX()&&mouseCX<bl.getX()+bl.getWidth()&&mouseCY>=bl.getY()&&mouseCY<bl.getY()+bl.getHeight()){
+                        //open the block
+                        if(!bl.flag){
+                            if(first){
+                                    stime = System.nanoTime();
+                                }
+                            first = false;
                             bl.pressed();
-                            //bl.draw(graphToBack);
                         }
+                        //bl.draw(graphToBack);
                     }
                 }
             }
+            click = false;
         }
         
         
@@ -181,17 +203,27 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
                             all.draw(graphToBack);
                         }
                     }
-                    //gameOver = true;
+                    gameOver = true;
                     break;
                 }
             }
         }
         //check for win
         //System.out.println(numOpened);
-        if(numOpened == (rows*cols)-mines){
+        if(numOpened >= (rows*cols)-mines){
             System.out.println(numOpened);
             System.out.println("YOU WIN!!"); //wrong
         }
+        
+        //timer
+        etime = System.nanoTime();
+        if(!first){
+            timer.draw(graphToBack,(etime-stime)/1000000000);
+        }
+        else{
+            timer.draw(graphToBack,0);
+        }
+        
         twoDGraph.drawImage(back, null, 0, 0);
     }
     
@@ -235,6 +267,7 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
 
     public void mouseClicked(MouseEvent e) {
         click = true;
+        rClick = true;
         mouseCX = e.getX();
         mouseCY = e.getY();
     }
@@ -245,6 +278,8 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
 
     public void mouseReleased(MouseEvent e) {
         click = false;
+        rClick = false;
+        
     }
 
     public void mouseEntered(MouseEvent e) {

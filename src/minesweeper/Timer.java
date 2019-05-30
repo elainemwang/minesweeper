@@ -5,19 +5,31 @@
  */
 package minesweeper;
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 /**
  *
  * @author elainewang
  */
-public class Timer extends Board implements Displayable{
-
-    public Timer(int rows, int cols, int bombs) {
-        super(rows, cols, bombs);
+public class Timer implements Displayable{
+    
+    int xPos;
+    int yPos;
+    
+    int width;
+    int height;
+    
+    public Timer() {
+        setPos(600,20);
+        setWidth(50);
+        setHeight(20);
     }
 
     @Override
     public void setPos(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        xPos = x;
+        yPos = y;
     }
 
     @Override
@@ -52,12 +64,20 @@ public class Timer extends Board implements Displayable{
 
     @Override
     public void setWidth(int w) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        width = w;
     }
 
     @Override
     public void setHeight(int h) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        height = h;
+    }
+    
+    public void draw(Graphics window, long time){
+        window.setColor(Color.WHITE);
+        window.fillRect(xPos,yPos,width,height);
+        window.setColor(Color.BLACK);
+        window.drawRect(xPos, yPos, width, height);
+        window.drawString(time+"", xPos+20, yPos+15);
     }
     
 }

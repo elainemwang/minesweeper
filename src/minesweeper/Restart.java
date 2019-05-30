@@ -14,7 +14,6 @@ import java.awt.Graphics;
  */
 public class Restart extends Button implements Displayable{
 
-    boolean restart = false;
     
     public Restart(){
         setPos(300,10);
@@ -23,7 +22,7 @@ public class Restart extends Button implements Displayable{
     }
 
     public void pressed() {
-        restart = true;
+        clicked = true;
     }
 
 
