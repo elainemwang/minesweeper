@@ -12,11 +12,10 @@ import java.awt.Graphics;
  *
  * @author elainewang
  */
-public class Restart extends Button implements Displayable{
+public class Restart extends Button implements Displayable {
 
-    
-    public Restart(){
-        setPos(300,10);
+    public Restart() {
+        setPos(300, 10);
         setWidth(50);
         setHeight(30);
     }
@@ -25,14 +24,12 @@ public class Restart extends Button implements Displayable{
         clicked = true;
     }
 
-
     public void draw(Graphics window) {
         window.setColor(Color.GRAY);
         window.fillRect(xPos, yPos, width, height);
         window.setColor(Color.YELLOW);
-        window.drawString("RESTART", xPos, yPos+10);
+        window.drawString("RESTART", xPos, yPos + 10);
     }
-
 
     public void setPos(int x, int y) {
         xPos = x;
@@ -78,5 +75,5 @@ public class Restart extends Button implements Displayable{
     public void setHeight(int h) {
         height = h;
     }
-    
+
 }

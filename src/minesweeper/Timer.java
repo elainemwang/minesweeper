@@ -12,16 +12,16 @@ import java.awt.Graphics;
  *
  * @author elainewang
  */
-public class Timer implements Displayable{
-    
+public class Timer implements Displayable {
+
     int xPos;
     int yPos;
-    
+
     int width;
     int height;
-    
+
     public Timer() {
-        setPos(600,20);
+        setPos(600, 20);
         setWidth(50);
         setHeight(20);
     }
@@ -71,13 +71,13 @@ public class Timer implements Displayable{
     public void setHeight(int h) {
         height = h;
     }
-    
-    public void draw(Graphics window, long time){
+
+    public void draw(Graphics window, long time) {
         window.setColor(Color.WHITE);
-        window.fillRect(xPos,yPos,width,height);
+        window.fillRect(xPos, yPos, width, height);
         window.setColor(Color.BLACK);
         window.drawRect(xPos, yPos, width, height);
-        window.drawString(time+"", xPos+20, yPos+15);
+        window.drawString(time + "", xPos + 20, yPos + 15);
     }
-    
+
 }

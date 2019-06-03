@@ -9,6 +9,8 @@ package minesweeper;
  *
  * @author elainewang
  */
+
+//just a test, not actually in the program
 public class testFrame extends javax.swing.JFrame {
 
     /**

@@ -13,12 +13,15 @@ import java.awt.Graphics;
  * @author elainewang
  */
 public abstract class Button {
+
     int xPos;
     int yPos;
     int width;
     int height;
     boolean clicked = false;
+
     public abstract void pressed();
+
     public abstract void draw(Graphics window);
-    
+
 }

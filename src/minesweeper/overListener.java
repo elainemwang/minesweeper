@@ -10,7 +10,7 @@ package minesweeper;
  * @author elainewang
  */
 
-//no time to implement, maybe later
-public class Settings {
-    
+//custom event for checking if the game is over
+public interface overListener {
+    void gameIsOver(int score);
 }

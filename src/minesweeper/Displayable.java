@@ -12,7 +12,7 @@ import java.awt.Graphics;
  * @author elainewang
  */
 public interface Displayable {
-    
+
     public void setPos(int x, int y);
 
     public void setX(int x);
@@ -30,7 +30,6 @@ public interface Displayable {
     public void setWidth(int w);
 
     public void setHeight(int h);
-    
+
     //public void draw(Graphics window);
-    
 }
