@@ -139,8 +139,8 @@ public class enterName extends javax.swing.JPanel implements overListener{
         
        
         try {
-            BufferedWriter outs = new BufferedWriter(new FileWriter("/Users/elainewang/Desktop/NetbeansProjects/minesweeper/src/minesweeper/scores.txt"));
-            BufferedWriter outn = new BufferedWriter(new FileWriter("/Users/elainewang/Desktop/NetbeansProjects/minesweeper/src/minesweeper/names.txt"));
+            BufferedWriter outs = new BufferedWriter(new FileWriter("src/minesweeper/scores.txt"));
+            BufferedWriter outn = new BufferedWriter(new FileWriter("src/minesweeper/names.txt"));
             for (int score : scores) {
                 outs.write(score + "");
                 outs.write("\n");
