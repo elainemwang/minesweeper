@@ -75,8 +75,8 @@ public class Minesweeper extends Canvas implements KeyListener, Runnable, MouseI
 
         listeners = new ArrayList<overListener>();
 
-        File scs = new File("/Users/elainewang/Desktop/NetbeansProjects/minesweeper/src/minesweeper/scores.txt");
-        File nms = new File("/Users/elainewang/Desktop/NetbeansProjects/minesweeper/src/minesweeper/names.txt");
+        File scs = new File("src/minesweeper/scores.txt");
+        File nms = new File("src/minesweeper/names.txt");
         Scanner sc = new Scanner(scs);
         Scanner nm = new Scanner(nms);
         for (int i = 0; i < names.length; i++) {
